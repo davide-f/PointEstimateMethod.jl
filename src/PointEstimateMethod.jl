@@ -8,6 +8,7 @@ using Polynomials
 
 export pem
 
+include("auxiliaries.jl")
 include("pem.jl")
 
 end
