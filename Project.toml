@@ -9,3 +9,10 @@ Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 GLPK = "60bf3e95-4087-53dc-ae20-288a0d20c6a6"
 JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
 Polynomials = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
+
+[compat]
+Combinatorics = "1"
+Distributions = "0.25"
+GLPK = "1"
+JuMP = "1"
+julia = "1.6"
