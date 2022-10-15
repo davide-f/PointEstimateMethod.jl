@@ -1,5 +1,13 @@
 module PointEstimateMethod
 
-greet() = print("Hello World!")
+using Distributions
+using Combinatorics
+using JuMP
+using GLPK
+using Polynomials
 
-end # module
+export pem
+
+include("pem.jl")
+
+end
