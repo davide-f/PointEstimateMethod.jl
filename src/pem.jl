@@ -20,13 +20,15 @@ Parameters
 
 Returns
 -------
-- results :: Vector{NamedTuple}
-    Vector of the couples location of the point estimate (x) and its probability (p)
-    for every point estimate. The total number is N
+- (x, p) :: NamedTuple
+    - x :: Vector
+        Return the location points
+    - p :: Vector
+        Return the probability of each point
 
 """
 function pem(
-        d <: UnivariateDistribution,
+        d::UnivariateDistribution,
         N::Integer;
         mean_fun::Function=Distributions.mean,
         std_fun::Function=Distributions.std,
@@ -96,7 +98,7 @@ function pem(
     # get locations of the estimated points
     x = ϵ.*std_value .+ mean_fun(d)
     
-    results = NamedTuple{(:x, :p)}.(zip(x, p))
+    # results = NamedTuple{(:x, :p)}.(zip(x, p))
 
-    return results
+    return (x=x, p=p)
 end
