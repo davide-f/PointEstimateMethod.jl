@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: : 2022 Davide Fioriti
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# coding: utf-8
+
 """
     pem(d, N; std_fun=std, central_moment_fun=moment)
 
