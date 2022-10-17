@@ -14,7 +14,7 @@ using Polynomials
 
 export pem
 
-DEFAULT_SOLVER = HiGHS.Optimizer
+DEFAULT_SOLVER = optimizer_with_attributes(HiGHS.Optimizer, "output_flag" => false)
 
 include("auxiliaries.jl")
 include("pem.jl")

@@ -39,7 +39,7 @@ function pem(
         mean_fun::Function=Distributions.mean,
         central_moment_fun::Function=Distributions.moment,
         montecarlo_sampling::Integer= 100000,
-        optimizer=DEFAULT_OPTIMIZER,
+        optimizer=DEFAULT_SOLVER,
     )
     
     if hasmethod(central_moment_fun, Tuple{typeof(d), Int})
@@ -92,7 +92,7 @@ function pem(
         N::Integer;
         mean_fun::Function=Distributions.mean,
         central_moment_fun::Function=Distributions.moment,
-        optimizer=DEFAULT_OPTIMIZER,
+        optimizer=DEFAULT_SOLVER,
     )
     
     ## Execution
@@ -142,7 +142,7 @@ function pem(
         mean_value,
         m_list::Dict,
         N::Integer;
-        optimizer=DEFAULT_OPTIMIZER,
+        optimizer=DEFAULT_SOLVER,
     )
     
     @assert Set(keys(m_list)) == Set(1:2*N) "The input moment dictionary does not match the expected index 1,...,2*N"
