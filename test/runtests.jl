@@ -39,7 +39,7 @@ function test_example(example_name, testing_function, args...)
         )
 
         YAML.write_file(path_solution, dict_calc_solution)
-        @warn("Preloaded solution not found, then it has been created")
+        @warn("Preloaded solution not found, then it has been created\nPath: $path_solution")
     end
 
 end
