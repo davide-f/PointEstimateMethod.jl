@@ -5,7 +5,7 @@
 # coding: utf-8
 
 """
-    pem(d, N; central_moment_fun=moment)
+    pem(d, N; mean_fun=mean, central_moment_fun=moment, optimizer=HiGHS.Optimizer)
 
 Point Estimate Method to identify N estimate points for the univariate distribution d.
 
@@ -39,7 +39,7 @@ function pem(
         mean_fun::Function=Distributions.mean,
         central_moment_fun::Function=Distributions.moment,
         montecarlo_sampling::Integer= 100000,
-        optimizer=GLPK.optimizer,
+        optimizer=DEFAULT_OPTIMIZER,
     )
     
     if hasmethod(central_moment_fun, Tuple{typeof(d), Int})
@@ -60,7 +60,7 @@ function pem(
 end
 
 """
-    pem(d, N; central_moment_fun=moment)
+    pem(d, N; mean_fun=mean, central_moment_fun=moment, optimizer=HiGHS.Optimizer)
 
 Point Estimate Method to identify N estimate points for an experimental distribution
 represented by the vector of elements d.
@@ -92,7 +92,7 @@ function pem(
         N::Integer;
         mean_fun::Function=Distributions.mean,
         central_moment_fun::Function=Distributions.moment,
-        optimizer=GLPK.optimizer,
+        optimizer=DEFAULT_OPTIMIZER,
     )
     
     ## Execution
@@ -109,7 +109,7 @@ end
 
 
 """
-    pem(mean_value, d, m_list, N; mean_fun=mean, std_fun=std, optimizer=GPLK.Optimizer)
+    pem(mean_value, d, m_list, N; optimizer=HiGHS.Optimizer)
 
 Point Estimate Method to identify N estimate points for the univariate distribution d.
 This function is based on the methodology proposed by:
@@ -142,7 +142,7 @@ function pem(
         mean_value,
         m_list::Dict,
         N::Integer;
-        optimizer=GLPK.optimizer,
+        optimizer=DEFAULT_OPTIMIZER,
     )
     
     @assert Set(keys(m_list)) == Set(1:2*N) "The input moment dictionary does not match the expected index 1,...,2*N"

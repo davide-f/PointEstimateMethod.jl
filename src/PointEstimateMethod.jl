@@ -9,10 +9,12 @@ module PointEstimateMethod
 using Distributions
 using Combinatorics
 using JuMP
-using GLPK
+using HiGHS
 using Polynomials
 
 export pem
+
+DEFAULT_SOLVER = HiGHS.Optimizer
 
 include("auxiliaries.jl")
 include("pem.jl")
