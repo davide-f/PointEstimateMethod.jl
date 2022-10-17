@@ -20,7 +20,9 @@ Parameters
 - central_moment_fun :: Function (optional)
     Function used to calculate the central moment of the distribution d
 - montecarlo_sampling :: Integer (optional)
-    Number of Monte Carlo samples used in the sampling procedure if a non-specific moment function is available 
+    Number of Monte Carlo samples used in the sampling procedure if a non-specific moment function is available
+- optimizer (optional)
+    JuMP optimizer for executing the optimization
 
 Returns
 -------
@@ -37,6 +39,7 @@ function pem(
         mean_fun::Function=Distributions.mean,
         central_moment_fun::Function=Distributions.moment,
         montecarlo_sampling::Integer= 100000,
+        optimizer=GLPK.optimizer,
     )
     
     if hasmethod(central_moment_fun, Tuple{typeof(d), Int})
@@ -47,12 +50,12 @@ function pem(
             for i = 1:(2*N)
         )
 
-        return pem(mean_fun(d), m_list, N)
+        return pem(mean_fun(d), m_list, N; optimizer=optimizer)
     else
         @info """Function $(string(central_moment_fun)) does not have a direct implementation for Distribution $(string(d)). Perform Monte Carlo sempling over the distribution with $montecarlo_sampling points"""
         sampled_set = rand(d, montecarlo_sampling)
 
-        return pem(sampled_set, N)
+        return pem(sampled_set, N; optimizer=optimizer)
     end
 end
 
@@ -72,6 +75,8 @@ Parameters
     Function used to calculate the mean value of the distribution
 - central_moment_fun :: Function (optional)
     Function used to calculate the central moment of the distribution d
+- optimizer (optional)
+    JuMP optimizer for executing the optimization
 
 Returns
 -------
@@ -87,6 +92,7 @@ function pem(
         N::Integer;
         mean_fun::Function=Distributions.mean,
         central_moment_fun::Function=Distributions.moment,
+        optimizer=GLPK.optimizer,
     )
     
     ## Execution
@@ -98,12 +104,12 @@ function pem(
         for i = 1:(2*N)
     )
 
-    return pem(mean_fun(d), m_list, N)
+    return pem(mean_fun(d), m_list, N; optimizer=optimizer)
 end
 
 
 """
-    pem(mean_value, d, m_list, N; mean_fun=mean, std_fun=std)
+    pem(mean_value, d, m_list, N; mean_fun=mean, std_fun=std, optimizer=GPLK.Optimizer)
 
 Point Estimate Method to identify N estimate points for the univariate distribution d.
 This function is based on the methodology proposed by:
@@ -120,6 +126,8 @@ Parameters
     of the moment
 - N :: Integer
     Number of desired estimate points
+- optimizer (optional)
+    JuMP optimizer for executing the optimization
 
 Returns
 -------
@@ -133,7 +141,8 @@ Returns
 function pem(
         mean_value,
         m_list::Dict,
-        N::Integer,
+        N::Integer;
+        optimizer=GLPK.optimizer,
     )
     
     @assert Set(keys(m_list)) == Set(1:2*N) "The input moment dictionary does not match the expected index 1,...,2*N"
@@ -154,7 +163,7 @@ function pem(
     ## 1) Preliminary model to get the coefficients of polynomial described in section 4
     ##    of https://www.jstor.org/stable/2631060
     
-    model = Model(GLPK.Optimizer)
+    model = Model(optimizer)
     
     # coefficients of auxiliary polynomial \sum_{k=0}^N C_k x^k = π(x) = (x - x_1) ... (x - x_N)
     @variable(model, C[i=0:N-1])
@@ -182,7 +191,7 @@ function pem(
     ϵ = roots(poly)
     
     # obtain the probabilities of such locations
-    postmodel = Model(GLPK.Optimizer)
+    postmodel = Model(optimizer)
     
     @variable(postmodel, 0 <= probabilities[j=1:N] <= 1.0)
     
