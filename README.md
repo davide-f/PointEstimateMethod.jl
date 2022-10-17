@@ -25,3 +25,14 @@ pem_output = pem(distribution, N_pem)
 pem_output.x  # locations of the points
 pem_output.p  # probability of each point
 ```
+
+The pem function automatically calculates the moments of the distribution 
+with the method Distributions.moment(::UnivariateDistribution, ::Int), by default;
+custom function can also be specified using the optional keyword central_moment_fun;
+see the docstring of the pem function.
+
+When the function is not available, the proposed distribution is sampled 
+using the rand function and then the sampled vector is used to calculate the moments.
+For more details, see the docstring of the pem function.
+
+Examples are provided in the notebooks folder.
