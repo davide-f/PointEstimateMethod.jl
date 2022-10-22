@@ -11,7 +11,8 @@ module Examples
     list_examples = [
         Example("Normal_2", Normal(), 2),
         Example("Normal_3", Normal(), 3),
-        Example("Normal_truncated", truncated(Normal(1.0, 0.4), 0.0, +Inf), 9),
+        Example("Normal_truncated_3", truncated(Normal(1.0, 0.4), 0.0, +Inf), 3),
+        Example("Normal_truncated_9", truncated(Normal(1.0, 0.4), 0.0, +Inf), 9),
     ]
 
 end
