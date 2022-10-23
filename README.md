@@ -11,7 +11,6 @@ The methodology implements the Miller and Rice methodology as described at:
 - Miller, Allen C., and Thomas R. Rice. “Discrete Approximations of Probability Distributions.” Management Science 29, no. 3 (1983): 352–62. http://www.jstor.org/stable/2631060.
 
 Example of usage is as follow:
-
 ```julia
 
 using Distributions
