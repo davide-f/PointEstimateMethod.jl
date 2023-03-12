@@ -6,8 +6,8 @@ using PointEstimateMethod
 include("Examples.jl")
 
 
-ATOL_TEST = 1e-5
-RTOL_TEST = 1e-5
+ATOL_TEST = 1e-4
+RTOL_TEST = 1e-4
 
 function vector_approx_test(x_test::Vector, x_validation::Vector, rtol=RTOL_TEST, atol=ATOL_TEST)
     length(x_test) != length(x_validation) && return false

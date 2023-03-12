@@ -185,10 +185,10 @@ function pem(
     # 2) postprocess the coefficients to obtain the desired locations
     poly_coeffs = [[value(C[i]) for i = 0:N-1]; 1.0]
     
-    poly = Polynomial(poly_coeffs)
+    poly = Polynomials.Polynomial(poly_coeffs)
     
     # get the roots of the polynomial and get the standardized locations of the distribution
-    ϵ = roots(poly)
+    ϵ = Polynomials.roots(poly)
     
     # obtain the probabilities of such locations
     postmodel = Model(optimizer)

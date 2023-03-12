@@ -10,7 +10,7 @@ using Distributions
 using Combinatorics
 using JuMP
 using HiGHS
-using Polynomials
+import Polynomials
 
 export pem
 
