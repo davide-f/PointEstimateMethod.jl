@@ -2,7 +2,6 @@ using Test
 using Distributions
 using YAML
 using PointEstimateMethod
-using Random
 
 include("Examples.jl")
 
@@ -21,7 +20,7 @@ end
 function test_example(example_name, testing_function, args...)
 
     # for reproducibility
-    Random.seed!(SEED)
+    Distributions.Random.seed!(SEED)
     
     # calculate simulations
     calc_solution = testing_function(args...)
