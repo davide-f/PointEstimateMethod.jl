@@ -5,6 +5,7 @@ using PointEstimateMethod
 
 include("Examples.jl")
 
+BASE_FOLDER = dirname(dirname(pathof(PointEstimateMethod)))
 
 ATOL_TEST = 1e-4
 RTOL_TEST = 1e-4
@@ -19,7 +20,7 @@ function test_example(example_name, testing_function, args...)
     # calculate simulations
     calc_solution = testing_function(args...)
 
-    path_solution = (string(@__DIR__) * "\\testcases\\" * string(testing_function) * "\\" * example_name * ".yml")
+    path_solution = joinpath(BASE_FOLDER, "test", "testcases", string(testing_function), example_name * ".yml")
 
     I_calc = sortperm(calc_solution.x)
     
