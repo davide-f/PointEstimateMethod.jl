@@ -19,7 +19,7 @@ Parameters
     Function used to calculate the mean value of the distribution
 - central_moment_fun :: Function (optional)
     Function used to calculate the central moment of the distribution d
-- montecarlo_sampling :: Integer (optional)
+- montecarlo_sampling :: Integer (optional, default 1e6)
     Number of Monte Carlo samples used in the sampling procedure if a non-specific moment function is available
 - optimizer (optional)
     JuMP optimizer for executing the optimization
@@ -38,7 +38,7 @@ function pem(
         N::Integer;
         mean_fun::Function=Distributions.mean,
         central_moment_fun::Function=Distributions.moment,
-        montecarlo_sampling::Integer= 100000,
+        montecarlo_sampling::Integer= 1000000,
         optimizer=DEFAULT_SOLVER,
     )
     

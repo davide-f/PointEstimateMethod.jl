@@ -2,6 +2,7 @@ using Test
 using Distributions
 using YAML
 using PointEstimateMethod
+using Random
 
 include("Examples.jl")
 
@@ -9,6 +10,7 @@ BASE_FOLDER = dirname(dirname(pathof(PointEstimateMethod)))
 
 ATOL_TEST = 1e-4
 RTOL_TEST = 1e-4
+SEED = 0
 
 function vector_approx_test(x_test::Vector, x_validation::Vector, rtol=RTOL_TEST, atol=ATOL_TEST)
     length(x_test) != length(x_validation) && return false
@@ -17,6 +19,10 @@ end
 
 "Function to test examples"
 function test_example(example_name, testing_function, args...)
+
+    # for reproducibility
+    Random.seed!(SEED)
+    
     # calculate simulations
     calc_solution = testing_function(args...)
 
