@@ -150,15 +150,9 @@ function pem(
     ## Execution
     ## Solving methodology by https://www.jstor.org/stable/2631060
     
-    # std variable
-    std_value = sqrt(m_list[2])
-    
     # lambda i value
-    λ = Dict(
-        i=>m_list[i]/(std_value^i) for i = 1:2*N
-    )
-    λ[0] = 1.0
-    
+    λ = Dict(i=>m_list[i] for i = 1:2*N)
+    λ[0] = 1.0    
     
     ## 1) Preliminary model to get the coefficients of polynomial described in section 4
     ##    of https://www.jstor.org/stable/2631060
@@ -179,8 +173,6 @@ function pem(
     
     # Determine coefficients
     optimize!(model)
-    
-    value.(C)
     
     # 2) postprocess the coefficients to obtain the desired locations
     poly_coeffs = [[value(C[i]) for i = 0:N-1]; 1.0]
@@ -207,9 +199,8 @@ function pem(
     p = value.(probabilities)
 
     # get locations of the estimated points
-    x = ϵ.*std_value .+ mean_value
+    x = ϵ .+ mean_value
     
     # results = NamedTuple{(:x, :p)}.(zip(x, p))
-
     return (x=x, p=p)
 end
