@@ -231,7 +231,7 @@ Parameters
     Function used to calculate the mean value of each distribution
 - central_moment_fun :: Function (optional)
     Function used to calculate the central moment of each distribution
-- montecarlo_sampling :: Integer (optional, default 1e6)
+- montecarlo_sampling :: Integer (optional, default 1000000)
     Number of Monte Carlo samples used if a non-specific moment function is available
 - optimizer (optional)
     JuMP optimizer for executing the optimization
@@ -279,9 +279,9 @@ function pem(
 
     for (j, combo) in enumerate(combos)
         for k in 1:K
-            x[k, j] = real(results[k].x[combo[k]])
+            x[k, j] = results[k].x[combo[k]]
         end
-        p[j] = prod(real(results[k].p[combo[k]]) for k in 1:K)
+        p[j] = prod(results[k].p[combo[k]] for k in 1:K)
     end
 
     return (x=x, p=p)
