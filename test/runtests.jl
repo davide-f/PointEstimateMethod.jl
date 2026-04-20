@@ -62,7 +62,7 @@ function test_multivariate_example(example_name, testing_function, args...)
     path_solution = joinpath(BASE_FOLDER, "test", "testcases", string(testing_function) * "_multivariate", example_name * ".yml")
 
     # Sort columns lexicographically for deterministic comparison
-    I_calc = sortperm(eachcol(calc_solution.x), by=col -> collect(col))
+    I_calc = sortperm(eachcol(calc_solution.x), by=col -> Tuple(col))
 
     x_sorted = calc_solution.x[:, I_calc]
     p_sorted = calc_solution.p[I_calc]

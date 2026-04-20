@@ -67,7 +67,7 @@ represented by the vector of elements d.
 
 Parameters
 ----------
-- d :: Vector
+- d :: Vector{<:Real}
     Distribution under interest
 - N :: Integer
     Number of desired estimate points
@@ -211,9 +211,14 @@ end
 
 Point Estimate Method to identify estimate points for K independent univariate distributions.
 
-For K independent distributions, the multivariate representation is constructed by taking
-the Cartesian product of the individual point estimates. Each combination has probability
-equal to the product of the individual point probabilities.
+For K independent distributions each with N concentrations, the multivariate representation
+uses K*N total concentration points. Each concentration point for variable k at concentration n
+has all other variables set to their means:
+
+    x_{k,n} = (μ_1, ..., μ_{k-1}, x_{k,n}, μ_{k+1}, ..., μ_K)
+
+with weight p_{k,n} / K, where p_{k,n} is the univariate weight for distribution k at
+concentration n. This ensures all weights sum to 1.
 
 This function implements the multivariate extension described in:
 - H.P. Hong, An efficient point estimate method for probabilistic analysis,
@@ -240,10 +245,10 @@ Returns
 -------
 - (x, p) :: NamedTuple
     - x :: Matrix{Float64}
-        Matrix of shape (K, M) where M = prod(N_1, ..., N_K). Each column is one
-        combination of point estimates across the K distributions.
+        Matrix of shape (K, M) where M = sum(N_1, ..., N_K). Each column is one
+        concentration point: only one variable deviates from its mean.
     - p :: Vector{Float64}
-        Joint probability of each combination point (product of individual probabilities).
+        Weight of each concentration point (p_{k,n} / K).
 
 """
 function pem(
@@ -270,18 +275,25 @@ function pem(
         for k in 1:K
     ]
 
-    # Form the Cartesian product of all point index combinations
-    combos = vec(collect(Iterators.product([1:Ns[k] for k in 1:K]...)))
+    # Mean of each distribution
+    μ = [mean_fun(distributions[k]) for k in 1:K]
 
-    M = length(combos)
+    # Build K*N concentration points following Hong (1998):
+    # For variable k at concentration n, all other variables stay at their mean.
+    M = sum(Ns)
     x = Matrix{Float64}(undef, K, M)
     p = Vector{Float64}(undef, M)
 
-    for (j, combo) in enumerate(combos)
-        for k in 1:K
-            x[k, j] = results[k].x[combo[k]]
+    j = 1
+    for k in 1:K
+        for n in 1:Ns[k]
+            # All variables at their mean, except variable k
+            x[:, j] .= μ
+            x[k, j] = results[k].x[n]
+            # Weight: p_{k,n} / K
+            p[j] = results[k].p[n] / K
+            j += 1
         end
-        p[j] = prod(results[k].p[combo[k]] for k in 1:K)
     end
 
     return (x=x, p=p)
