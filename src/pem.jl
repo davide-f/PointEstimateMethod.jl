@@ -88,7 +88,7 @@ Returns
 
 """
 function pem(
-        d::Vector,
+        d::Vector{<:Real},
         N::Integer;
         mean_fun::Function=Distributions.mean,
         central_moment_fun::Function=Distributions.moment,
@@ -202,5 +202,87 @@ function pem(
     x = ϵ .+ mean_value
     
     # results = NamedTuple{(:x, :p)}.(zip(x, p))
+    return (x=x, p=p)
+end
+
+
+"""
+    pem(distributions, N; mean_fun=mean, central_moment_fun=moment, optimizer=HiGHS.Optimizer)
+
+Point Estimate Method to identify estimate points for K independent univariate distributions.
+
+For K independent distributions, the multivariate representation is constructed by taking
+the Cartesian product of the individual point estimates. Each combination has probability
+equal to the product of the individual point probabilities.
+
+This function implements the multivariate extension described in:
+- H.P. Hong, An efficient point estimate method for probabilistic analysis,
+  Reliability Engineering and System Safety, 1998, https://doi.org/10.1016/S0951-8320(97)00071-9
+
+Parameters
+----------
+- distributions :: Vector{<:UnivariateDistribution}
+    Vector of K independent univariate distributions
+- N :: Union{Integer, Vector{<:Integer}}
+    Number of desired estimate points per distribution. If an Integer is provided,
+    the same N is used for all distributions. If a Vector is provided, N[k] is
+    used for the k-th distribution.
+- mean_fun :: Function (optional)
+    Function used to calculate the mean value of each distribution
+- central_moment_fun :: Function (optional)
+    Function used to calculate the central moment of each distribution
+- montecarlo_sampling :: Integer (optional, default 1e6)
+    Number of Monte Carlo samples used if a non-specific moment function is available
+- optimizer (optional)
+    JuMP optimizer for executing the optimization
+
+Returns
+-------
+- (x, p) :: NamedTuple
+    - x :: Matrix{Float64}
+        Matrix of shape (K, M) where M = prod(N_1, ..., N_K). Each column is one
+        combination of point estimates across the K distributions.
+    - p :: Vector{Float64}
+        Joint probability of each combination point (product of individual probabilities).
+
+"""
+function pem(
+        distributions::Vector{<:UnivariateDistribution},
+        N::Union{Integer, Vector{<:Integer}};
+        mean_fun::Function=Distributions.mean,
+        central_moment_fun::Function=Distributions.moment,
+        montecarlo_sampling::Integer=1000000,
+        optimizer=DEFAULT_SOLVER,
+    )
+
+    K = length(distributions)
+    Ns = N isa Integer ? fill(N, K) : N
+
+    @assert length(Ns) == K "Length of N vector must match the number of distributions (got $(length(Ns)), expected $K)"
+
+    # Apply univariate pem to each distribution independently
+    results = [
+        pem(distributions[k], Ns[k];
+            mean_fun=mean_fun,
+            central_moment_fun=central_moment_fun,
+            montecarlo_sampling=montecarlo_sampling,
+            optimizer=optimizer)
+        for k in 1:K
+    ]
+
+    # Form the Cartesian product of all point index combinations
+    combos = vec(collect(Iterators.product([1:Ns[k] for k in 1:K]...)))
+
+    M = length(combos)
+    x = Matrix{Float64}(undef, K, M)
+    p = Vector{Float64}(undef, M)
+
+    for (j, combo) in enumerate(combos)
+        for k in 1:K
+            x[k, j] = real(results[k].x[combo[k]])
+        end
+        p[j] = prod(real(results[k].p[combo[k]]) for k in 1:K)
+    end
+
     return (x=x, p=p)
 end
