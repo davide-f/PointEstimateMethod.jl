@@ -1,4 +1,5 @@
 ![CI](https://github.com/davide-f/PointEstimateMethod.jl/actions/workflows/CI.yml/badge.svg)
+[![Documentation](https://github.com/davide-f/PointEstimateMethod.jl/actions/workflows/Documentation.yml/badge.svg)](https://davide-f.github.io/PointEstimateMethod.jl/)
 
 
 # PointEstimateMethod.jl
