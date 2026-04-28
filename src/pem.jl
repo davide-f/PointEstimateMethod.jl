@@ -67,7 +67,7 @@ represented by the vector of elements d.
 
 Parameters
 ----------
-- d :: Vector
+- d :: Vector{<:Real}
     Distribution under interest
 - N :: Integer
     Number of desired estimate points
@@ -88,7 +88,7 @@ Returns
 
 """
 function pem(
-        d::Vector,
+        d::Vector{<:Real},
         N::Integer;
         mean_fun::Function=Distributions.mean,
         central_moment_fun::Function=Distributions.moment,
@@ -118,9 +118,9 @@ This function is based on the methodology proposed by:
 
 Parameters
 ----------
-- mean_value
+- mean_value :: Real
     Mean value of the distribution
-- m_list :: Dict
+- m_list :: Dict{<:Integer, <:Real}
     Dictionary representing the central moments of the distribution.
     The keys of the dictionary shall go from 0 to N and the value corresponds to the value
     of the moment.
@@ -140,8 +140,8 @@ Returns
 
 """
 function pem(
-        mean_value,
-        m_list::Dict,
+        mean_value::Real,
+        m_list::Dict{<:Integer, <:Real},
         N::Integer;
         optimizer=DEFAULT_SOLVER,
     )
