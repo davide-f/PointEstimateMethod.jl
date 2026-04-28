@@ -1,6 +1,7 @@
 using PointEstimateMethod
 using Documenter
 using Literate
+using Test
 
 const _EXAMPLE_DIR = joinpath(@__DIR__, "src", "examples")
 
