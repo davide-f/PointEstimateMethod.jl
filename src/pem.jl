@@ -121,9 +121,10 @@ Parameters
 - mean_value
     Mean value of the distribution
 - m_list :: Dict
-    Dictionary representing the moments of the distribution.
+    Dictionary representing the central moments of the distribution.
     The keys of the dictionary shall go from 0 to N and the value corresponds to the value
-    of the moment
+    of the moment.
+    Note: they are central moments referred to the mean. As such, the moment of order 1 is 0.0.
 - N :: Integer
     Number of desired estimate points
 - optimizer (optional)
