@@ -63,8 +63,8 @@ function test_example(example_name, testing_function, args...)
         # otherwise create the tests
         mkpath(dirname(path_solution))
 
-        x_for_yaml = x_sorted isa Matrix ? [x_sorted[i, :] for i in 1:axes(x_sorted, 1)] : x_sorted
-        p_for_yaml = p_sorted isa Matrix ? [p_sorted[i, :] for i in 1:axes(p_sorted, 1)] : p_sorted
+        x_for_yaml = x_sorted isa Matrix ? [x_sorted[i, :] for i in axes(x_sorted, 1)] : x_sorted
+        p_for_yaml = p_sorted isa Matrix ? [p_sorted[i, :] for i in axes(p_sorted, 1)] : p_sorted
 
 
         dict_calc_solution = Dict(

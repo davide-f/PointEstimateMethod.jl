@@ -15,6 +15,7 @@ module Examples
         Example("Normal_truncated_9", truncated(Normal(1.0, 0.4), 0.0, +Inf), 9),
         Example("MultiVariate_Normal_2", [Normal()], 2),
         Example("MultiVariate_2Normal_3", [Normal(), Normal()], 3),
+        Example("MultiVariate_3Normal_2", [Normal(), Normal(), Normal()], 2),
     ]
 
 end
