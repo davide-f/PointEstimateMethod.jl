@@ -37,6 +37,6 @@ pem_output.p  # probability of each point
 ## Contents
 
 ```@contents
-Pages = ["index.md", "installation.md", "examples/normal_distribution.md", "examples/general_distribution.md", "api_reference.md"]
+Pages = ["index.md", "installation.md", "examples/normal_distribution.md", "examples/general_distribution.md", "examples/multivariate_distribution.md", "api_reference.md"]
 Depth = 2
 ```

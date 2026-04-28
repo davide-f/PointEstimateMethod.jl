@@ -18,6 +18,7 @@ makedocs(
         "Examples" => [
             "examples/normal_distribution.md",
             "examples/general_distribution.md",
+            "examples/multivariate_distribution.md",
         ],
         "API Reference" => "api_reference.md",
     ]
