@@ -5,7 +5,7 @@
 # coding: utf-8
 
 """
-    pem(d, N; mean_fun=mean, central_moment_fun=moment, optimizer=HiGHS.Optimizer)
+    pem(d, N; central_moment_fun=moment, optimizer=HiGHS.Optimizer)
 
 Point Estimate Method to identify N estimate points for the univariate distribution d.
 
@@ -15,8 +15,6 @@ Parameters
     Distribution under interest
 - N :: Integer
     Number of desired estimate points
-- mean_fun :: Function (optional)
-    Function used to calculate the mean value of the distribution
 - central_moment_fun :: Function (optional)
     Function used to calculate the central moment of the distribution d
 - montecarlo_sampling :: Integer (optional, default 1e6)
@@ -36,7 +34,6 @@ Returns
 function pem(
         d::UnivariateDistribution,
         N::Integer;
-        mean_fun::Function=Distributions.mean,
         central_moment_fun::Function=Distributions.moment,
         montecarlo_sampling::Integer= 1000000,
         optimizer=DEFAULT_SOLVER,
@@ -50,7 +47,7 @@ function pem(
             for i = 1:(2*N)
         )
 
-        return pem(mean_fun(d), m_list, N; optimizer=optimizer)
+        return pem(m_list, N; optimizer=optimizer)
     else
         @info """Function $(string(central_moment_fun)) does not have a direct implementation for Distribution $(string(d)). Perform Monte Carlo sempling over the distribution with $montecarlo_sampling points"""
         sampled_set = rand(d, montecarlo_sampling)
@@ -71,8 +68,6 @@ Parameters
     Distribution under interest
 - N :: Integer
     Number of desired estimate points
-- mean_fun :: Function (optional)
-    Function used to calculate the mean value of the distribution
 - central_moment_fun :: Function (optional)
     Function used to calculate the central moment of the distribution d
 - optimizer (optional)
@@ -90,7 +85,6 @@ Returns
 function pem(
         d::Vector,
         N::Integer;
-        mean_fun::Function=Distributions.mean,
         central_moment_fun::Function=Distributions.moment,
         optimizer=DEFAULT_SOLVER,
     )
@@ -104,12 +98,12 @@ function pem(
         for i = 1:(2*N)
     )
 
-    return pem(mean_fun(d), m_list, N; optimizer=optimizer)
+    return pem(m_list, N; optimizer=optimizer)
 end
 
 
 """
-    pem(mean_value, d, m_list, N; optimizer=HiGHS.Optimizer)
+    pem(d, m_list, N; optimizer=HiGHS.Optimizer)
 
 Point Estimate Method to identify N estimate points for the univariate distribution d.
 This function is based on the methodology proposed by:
@@ -118,8 +112,6 @@ This function is based on the methodology proposed by:
 
 Parameters
 ----------
-- mean_value
-    Mean value of the distribution
 - m_list :: Dict
     Dictionary representing the moments of the distribution.
     The keys of the dictionary shall go from 0 to N and the value corresponds to the value
@@ -139,7 +131,6 @@ Returns
 
 """
 function pem(
-        mean_value,
         m_list::Dict,
         N::Integer;
         optimizer=DEFAULT_SOLVER,
@@ -152,7 +143,8 @@ function pem(
     
     # lambda i value
     λ = Dict(i=>m_list[i] for i = 1:2*N)
-    λ[0] = 1.0    
+    λ[0] = 1.0
+    mean_value = λ[1]
     
     ## 1) Preliminary model to get the coefficients of polynomial described in section 4
     ##    of https://www.jstor.org/stable/2631060
