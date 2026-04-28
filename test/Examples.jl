@@ -16,6 +16,7 @@ module Examples
         Example("MultiVariate_Normal_2", [Normal()], 2),
         Example("MultiVariate_2Normal_3", [Normal(), Normal()], 3),
         Example("MultiVariate_3Normal_2", [Normal(), Normal(), Normal()], 2),
+        Example("MultiVariate_3Normal_3", [Normal(), Normal(), Normal()], 3),
     ]
 
 end
