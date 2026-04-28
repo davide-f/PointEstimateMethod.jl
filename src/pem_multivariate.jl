@@ -45,7 +45,7 @@ function pem(
 
     K = length(d)
     
-    if hasmethod(central_moment_fun, Tuple{typeof(d), Int})
+    if all(hasmethod(central_moment_fun, Tuple{typeof(d[k]), Int}) for k in 1:K)
     
         # central moments
         m_list = Dict(
@@ -232,10 +232,10 @@ function pem(
     optimize!(postmodel)
     
     # get probabilities
-    p = value.(probabilities)
+    p = reshape(value.(probabilities), K, N)
 
     # get locations of the estimated points
-    x = ϵ .+ mean_values
+    x = ϵ .+ reshape(mean_values, K, 1)
     
     # results = NamedTuple{(:x, :p)}.(zip(x, p))
     return (x=x, p=p)
