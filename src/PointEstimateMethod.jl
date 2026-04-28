@@ -23,6 +23,7 @@ DEFAULT_SOLVER = optimizer_with_attributes(
 )
 
 include("auxiliaries.jl")
-include("pem.jl")
+include("pem_univariate.jl")
+include("pem_multivariate.jl")
 
 end
